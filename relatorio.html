@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Relatório Geral - Diário Digital do Esporte</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <img src="logo-prefeitura.png">
+  <div>
+    <h1>Diário Digital do Esporte - Juruaia</h1>
+    <p>Instituição: Prefeitura Municipal de Juruaia</p>
+    <p>Professor Responsável: Alex Castro</p>
+  </div>
+</header>
+
+<nav>
+  <a href="index.html">Início</a>
+  <a href="cadastro.html">Cadastro de Alunos</a>
+  <a href="aulas.html">Aulas e Chamada</a>
+  <a href="ocorrencias.html">Ocorrências</a>
+  <a href="relatorio.html">Relatórios</a>
+</nav>
+
+<main id="areaRelatorio">
+
+  <h2>Relatório Geral de Atividades</h2>
+  <p>Documento oficial para prestação de contas do ICMS Esportivo.</p>
+
+  <hr>
+
+  <h3>1. Alunos Cadastrados</h3>
+  <table border="1" width="100%" id="tabelaAlunosRel">
+    <tr>
+      <th>Nome</th>
+      <th>Nascimento</th>
+      <th>WhatsApp</th>
+      <th>Pai</th>
+      <th>Responsável</th>
+    </tr>
+  </table>
+
+  <hr>
+
+  <h3>2. Aulas Realizadas</h3>
+  <table border="1" width="100%" id="tabelaAulasRel">
+    <tr>
+      <th>Data</th>
+      <th>Tema</th>
+    </tr>
+  </table>
+
+  <hr>
+
+  <h3>3. Ocorrências Registradas</h3>
+  <table border="1" width="100%" id="tabelaOcorrenciasRel">
+    <tr>
+      <th>Data</th>
+      <th>Aluno</th>
+      <th>Descrição</th>
+    </tr>
+  </table>
+
+  <hr>
+
+  <br><br>
+
+  <div style="display:flex; justify-content:space-around; margin-top:50px;">
+    <div style="text-align:center;">
+      _______________________________<br>
+      <strong>Professor Responsável</strong><br>
+      Alex Castro
+    </div>
+
+    <div style="text-align:center;">
+      _______________________________<br>
+      <strong>Diretor de Esportes</strong><br>
+      Ednilson Donizetti Francisco de Souza
+    </div>
+  </div>
+
+  <br><br>
+
+  <button onclick="window.print()">🖨️ Imprimir Relatório</button>
+
+</main>
+
+<script>
+// ====== CARREGAR DADOS DO LOCALSTORAGE ======
+
+let alunos = JSON.parse(localStorage.getItem("alunos")) || [];
+let aulas = JSON.parse(localStorage.getItem("aulas")) || [];
+let ocorrencias = JSON.parse(localStorage.getItem("ocorrencias")) || [];
+
+// --- Preencher tabela alunos ---
+let tabelaAlunos = document.getElementById("tabelaAlunosRel");
+alunos.forEach(a => {
+  let linha = tabelaAlunos.insertRow(-1);
+  linha.insertCell(0).innerText = a.nome || "";
+  linha.insertCell(1).innerText = a.nascimento || "";
+  linha.insertCell(2).innerText = a.whatsapp || "";
+  linha.insertCell(3).innerText = a.pai || "";
+  linha.insertCell(4).innerText = a.responsavel || "";
+});
+
+// --- Preencher tabela aulas ---
+let tabelaAulas = document.getElementById("tabelaAulasRel");
+aulas.forEach(a => {
+  let linha = tabelaAulas.insertRow(-1);
+  linha.insertCell(0).innerText = a.data || "";
+  linha.insertCell(1).innerText = a.tema || "";
+});
+
+// --- Preencher tabela ocorrências ---
+let tabelaOc = document.getElementById("tabelaOcorrenciasRel");
+ocorrencias.forEach(o => {
+  let linha = tabelaOc.insertRow(-1);
+  linha.insertCell(0).innerText = o.data || "";
+  linha.insertCell(1).innerText = o.aluno || "";
+  linha.insertCell(2).innerText = o.descricao || "";
+});
+</script>
+
+</body>
+</html>
