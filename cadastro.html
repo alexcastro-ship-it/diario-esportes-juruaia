@@ -12,12 +12,13 @@
   <div>
     <h1>Diário Digital do Esporte</h1>
     <p>Instituição: Prefeitura de Juruaia</p>
-    <p>Professor Responsável: Alex Castro/Italo Pereira</p>
+    <p>Professor Responsável: Alex Castro</p>
   </div>
 </header>
 
 <nav>
   <a href="index.html">Início</a>
+  <a href="turmas.html">Cadastro de Turmas</a>
   <a href="cadastro.html">Cadastro de Alunos</a>
   <a href="aulas.html">Aulas e Chamada</a>
   <a href="ocorrencias.html">Ocorrências</a>
@@ -43,6 +44,9 @@
     <label>Nome do Responsável:</label><br>
     <input type="text" id="responsavel"><br><br>
 
+    <label>Turma:</label><br>
+    <select id="turmaAluno"></select><br><br>
+
     <button type="button" onclick="salvarAluno()">Salvar Aluno</button>
   </form>
 
@@ -50,38 +54,74 @@
   <table border="1" width="100%" id="tabelaAlunos">
     <tr>
       <th>Nome</th>
-      <th>Nascimento</th>
+      <th>Turma</th>
       <th>WhatsApp</th>
-      <th>Pai</th>
-      <th>Responsável</th>
     </tr>
   </table>
 </main>
 
 <script>
-function salvarAluno() {
-  let nome = document.getElementById("nome").value;
-  let nascimento = document.getElementById("nascimento").value;
-  let whatsapp = document.getElementById("whatsapp").value;
-  let pai = document.getElementById("pai").value;
-  let responsavel = document.getElementById("responsavel").value;
+// ===== Carregar turmas no select =====
+function carregarTurmasSelect() {
+  let turmas = JSON.parse(localStorage.getItem("turmas")) || [];
+  let select = document.getElementById("turmaAluno");
+  select.innerHTML = "";
 
-  if(nome === "") {
-    alert("Preencha o nome!");
+  turmas.forEach(t => {
+    let option = document.createElement("option");
+    option.value = t.nome;
+    option.text = t.nome + " (" + t.professor + ")";
+    select.appendChild(option);
+  });
+}
+
+// ===== Salvar aluno =====
+function salvarAluno() {
+  let aluno = {
+    nome: document.getElementById("nome").value,
+    nascimento: document.getElementById("nascimento").value,
+    whatsapp: document.getElementById("whatsapp").value,
+    pai: document.getElementById("pai").value,
+    responsavel: document.getElementById("responsavel").value,
+    turma: document.getElementById("turmaAluno").value
+  };
+
+  if(aluno.nome === ""){
+    alert("Digite o nome do aluno!");
     return;
   }
 
-  let tabela = document.getElementById("tabelaAlunos");
-  let linha = tabela.insertRow(-1);
-
-  linha.insertCell(0).innerHTML = nome;
-  linha.insertCell(1).innerHTML = nascimento;
-  linha.insertCell(2).innerHTML = whatsapp;
-  linha.insertCell(3).innerHTML = pai;
-  linha.insertCell(4).innerHTML = responsavel;
+  let alunos = JSON.parse(localStorage.getItem("alunos")) || [];
+  alunos.push(aluno);
+  localStorage.setItem("alunos", JSON.stringify(alunos));
 
   document.getElementById("formAluno").reset();
+  listarAlunos();
 }
+
+// ===== Listar alunos =====
+function listarAlunos() {
+  let tabela = document.getElementById("tabelaAlunos");
+  tabela.innerHTML = `
+    <tr>
+      <th>Nome</th>
+      <th>Turma</th>
+      <th>WhatsApp</th>
+    </tr>
+  `;
+
+  let alunos = JSON.parse(localStorage.getItem("alunos")) || [];
+  alunos.forEach(a => {
+    let linha = tabela.insertRow(-1);
+    linha.insertCell(0).innerText = a.nome;
+    linha.insertCell(1).innerText = a.turma;
+    linha.insertCell(2).innerText = a.whatsapp;
+  });
+}
+
+// ===== Inicialização =====
+carregarTurmasSelect();
+listarAlunos();
 </script>
 
 </body>
