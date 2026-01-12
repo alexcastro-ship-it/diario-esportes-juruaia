@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastro de Turmas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <img src="logo-prefeitura.png">
+  <div>
+    <h1>Diário Digital do Esporte</h1>
+    <p>Instituição: Prefeitura Municipal de Juruaia</p>
+    <p>Professor Responsável: Alex Castro</p>
+  </div>
+</header>
+
+<nav>
+  <a href="index.html">Início</a>
+  <a href="turmas.html">Cadastro de Turmas</a>
+  <a href="cadastro.html">Cadastro de Alunos</a>
+  <a href="aulas.html">Aulas e Chamada</a>
+  <a href="ocorrencias.html">Ocorrências</a>
+  <a href="relatorio.html">Relatórios</a>
+</nav>
+
+<main>
+
+  <h2>Cadastro de Turmas</h2>
+
+  <label>Nome da Turma:</label><br>
+  <input type="text" id="nomeTurma"><br><br>
+
+  <label>Professor da Turma:</label><br>
+  <select id="professorTurma">
+    <option value="Flavia">Flavia</option>
+    <option value="Miguel">Miguel</option>
+    <option value="Vinicius">Vinicius</option>
+    <option value="Alex">Alex</option>
+    <option value="Italo">Italo</option>
+    <option value="Elton">Elton</option>
+  </select>
+  <br><br>
+
+  <button onclick="salvarTurma()">Salvar Turma</button>
+
+  <hr>
+
+  <h3>Turmas Cadastradas</h3>
+
+  <table border="1" width="100%" id="tabelaTurmas">
+    <tr>
+      <th>Turma</th>
+      <th>Professor</th>
+    </tr>
+  </table>
+
+</main>
+
+<script>
+function salvarTurma() {
+  let nome = document.getElementById("nomeTurma").value;
+  let professor = document.getElementById("professorTurma").value;
+
+  if(nome === ""){
+    alert("Digite o nome da turma!");
+    return;
+  }
+
+  let turmas = JSON.parse(localStorage.getItem("turmas")) || [];
+
+  turmas.push({
+    nome: nome,
+    professor: professor
+  });
+
+  localStorage.setItem("turmas", JSON.stringify(turmas));
+
+  document.getElementById("nomeTurma").value = "";
+  listarTurmas();
+}
+
+function listarTurmas() {
+  let tabela = document.getElementById("tabelaTurmas");
+  tabela.innerHTML = `
+    <tr>
+      <th>Turma</th>
+      <th>Professor</th>
+    </tr>
+  `;
+
+  let turmas = JSON.parse(localStorage.getItem("turmas")) || [];
+
+  turmas.forEach(t => {
+    let linha = tabela.insertRow(-1);
+    linha.insertCell(0).innerText = t.nome;
+    linha.insertCell(1).innerText = t.professor;
+  });
+}
+
+listarTurmas();
+</script>
+
+</body>
+</html>
