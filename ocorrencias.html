@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Ocorrências</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <img src="logo-prefeitura.png">
+  <div>
+    <h1>Diário Digital do Esporte</h1>
+    <p>Instituição: Prefeitura de Juruaia</p>
+    <p>Professor Responsável: Alex Castro</p>
+  </div>
+</header>
+
+<nav>
+  <a href="index.html">Início</a>
+  <a href="cadastro.html">Cadastro de Alunos</a>
+  <a href="aulas.html">Aulas e Chamada</a>
+  <a href="ocorrencias.html">Ocorrências</a>
+  <a href="relatorio.html">Relatórios</a>
+</nav>
+
+<main>
+
+  <h2>Registro de Ocorrência</h2>
+
+  <label>Data da Ocorrência:</label><br>
+  <input type="date" id="dataOcorrencia"><br><br>
+
+  <label>Aluno:</label><br>
+  <select id="alunoOcorrencia"></select><br><br>
+
+  <label>Descrição da Ocorrência:</label><br>
+  <textarea id="descricaoOcorrencia" rows="4" cols="50"></textarea><br><br>
+
+  <button onclick="salvarOcorrencia()">Registrar Ocorrência</button>
+
+  <hr>
+
+  <h2>Ocorrências Registradas</h2>
+
+  <table border="1" width="100%" id="tabelaOcorrencias">
+    <tr>
+      <th>Data</th>
+      <th>Aluno</th>
+      <th>Descrição</th>
+    </tr>
+  </table>
+
+  <br>
+  <button onclick="window.print()">🖨️ Imprimir Registro</button>
+
+  <br><br>
+
+  <p>Professor Responsável: __________________________</p>
+  <p>Diretor de Esportes: __________________________</p>
+
+</main>
+
+<script>
+// --- Carregar alunos no select ---
+function carregarAlunosSelect() {
+  let alunos = JSON.parse(localStorage.getItem("alunos")) || [];
+  let select = document.getElementById("alunoOcorrencia");
+  select.innerHTML = "";
+
+  alunos.forEach(aluno => {
+    let option = document.createElement("option");
+    option.value = aluno.nome;
+    option.text = aluno.nome;
+    select.appendChild(option);
+  });
+}
+
+// --- Salvar ocorrência ---
+function salvarOcorrencia() {
+  let data = document.getElementById("dataOcorrencia").value;
+  let aluno = document.getElementById("alunoOcorrencia").value;
+  let descricao = document.getElementById("descricaoOcorrencia").value;
+
+  if(data === "" || descricao === "") {
+    alert("Preencha todos os campos!");
+    return;
+  }
+
+  let ocorrencias = JSON.parse(localStorage.getItem("ocorrencias")) || [];
+
+  ocorrencias.push({
+    data: data,
+    aluno: aluno,
+    descricao: descricao
+  });
+
+  localStorage.setItem("ocorrencias", JSON.stringify(ocorrencias));
+
+  document.getElementById("dataOcorrencia").value = "";
+  document.getElementById("descricaoOcorrencia").value = "";
+
+  listarOcorrencias();
+}
+
+// --- Listar ocorrências ---
+function listarOcorrencias() {
+  let tabela = document.getElementById("tabelaOcorrencias");
+  tabela.innerHTML = `
+    <tr>
+      <th>Data</th>
+      <th>Aluno</th>
+      <th>Descrição</th>
+    </tr>
+  `;
+
+  let ocorrencias = JSON.parse(localStorage.getItem("ocorrencias")) || [];
+
+  ocorrencias.forEach(item => {
+    let linha = tabela.insertRow(-1);
+    linha.insertCell(0).innerText = item.data;
+    linha.insertCell(1).innerText = item.aluno;
+    linha.insertCell(2).innerText = item.descricao;
+  });
+}
+
+// --- Inicialização ---
+carregarAlunosSelect();
+listarOcorrencias();
+</script>
+
+</body>
+</html>
