@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Aulas e Chamada</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <img src="logo-prefeitura.png">
+  <div>
+    <h1>Diário Digital do Esporte</h1>
+    <p>Instituição: Prefeitura de Juruaia</p>
+    <p>Professor Responsável: Alex Castro</p>
+  </div>
+</header>
+
+<nav>
+  <a href="index.html">Início</a>
+  <a href="cadastro.html">Cadastro de Alunos</a>
+  <a href="aulas.html">Aulas e Chamada</a>
+  <a href="ocorrencias.html">Ocorrências</a>
+  <a href="relatorio.html">Relatórios</a>
+</nav>
+
+<main>
+  <h2>Cadastro de Aula</h2>
+
+  <label>Data da Aula:</label><br>
+  <input type="date" id="dataAula"><br><br>
+
+  <label>Tema da Aula:</label><br>
+  <input type="text" id="temaAula"><br><br>
+
+  <button onclick="criarChamada()">Criar Chamada</button>
+
+  <hr>
+
+  <h2>Lista de Chamada</h2>
+  <p><strong>Data:</strong> <span id="exibeData"></span></p>
+  <p><strong>Tema:</strong> <span id="exibeTema"></span></p>
+
+  <table border="1" width="100%" id="tabelaChamada">
+    <tr>
+      <th>Aluno</th>
+      <th>Presente</th>
+      <th>Falta</th>
+    </tr>
+  </table>
+
+  <br>
+  <button onclick="window.print()">🖨️ Imprimir Chamada</button>
+
+  <br><br>
+
+  <p>Professor Responsável: __________________________</p>
+  <p>Diretor de Esportes: __________________________</p>
+
+</main>
+
+<script>
+// --- Carrega alunos cadastrados da página cadastro ---
+function carregarAlunos() {
+  let alunos = JSON.parse(localStorage.getItem("alunos")) || [];
+  return alunos;
+}
+
+// --- Criar chamada ---
+function criarChamada() {
+  let data = document.getElementById("dataAula").value;
+  let tema = document.getElementById("temaAula").value;
+
+  if(data === "" || tema === "") {
+    alert("Preencha data e tema!");
+    return;
+  }
+
+  document.getElementById("exibeData").innerText = data;
+  document.getElementById("exibeTema").innerText = tema;
+
+  let tabela = document.getElementById("tabelaChamada");
+  tabela.innerHTML = `
+    <tr>
+      <th>Aluno</th>
+      <th>Presente</th>
+      <th>Falta</th>
+    </tr>
+  `;
+
+  let alunos = carregarAlunos();
+
+  alunos.forEach(aluno => {
+    let linha = tabela.insertRow(-1);
+    linha.insertCell(0).innerText = aluno.nome;
+    linha.insertCell(1).innerHTML = `<input type="checkbox">`;
+    linha.insertCell(2).innerHTML = `<input type="checkbox">`;
+  });
+}
+</script>
+
+</body>
+</html>
